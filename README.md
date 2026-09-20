@@ -71,7 +71,7 @@ trao-ai-interview-prep-kit/
 │   │   │   └── evaluate.js              # Mandatory Trao Batch Evaluator CLI entry point
 │   │   ├── app.js                       # Express app configuration (Helmet, CORS, parsers)
 │   │   └── server.js                    # Server bootstrap with graceful shutdown
-│   └── tests/                           # Hermetic automated unit test suites (84 tests)
+│   └── tests/                           # Hermetic automated unit test suites (94 tests)
 │       ├── health.test.js
 │       ├── auth.test.js
 │       ├── crawler.test.js
@@ -342,7 +342,17 @@ NEXT_PUBLIC_APP_NAME="Trao AI Interview Prep Kit"
 ```bash
 npm test
 ```
-Runs 84 unit and integration tests across 20 test suites using Node.js built-in test runner.
+Runs 94 unit and integration tests across 20 test suites using Node.js built-in test runner. Tests comprehensively verify:
+- Complete 8-stage decoupled LLM generation pipeline & mock provider
+- LLM JSON parsing repair (missing commas between array elements/properties, comments, unescaped characters, truncation auto-closing)
+- Transient Gemini 503 Service Unavailable backoff & retry
+- Daily quota exhaustion fast-fail (`GenerateRequestsPerDayPerProject-FreeTier`, limit: 20/day) & `RetryInfo` delay handling
+- Deterministic coverage checking (100% coverage, gap detection, targeted remediation)
+- Deterministic schedule allocation across 1–60 day horizons
+- Optimistic kit builder mutations, pinning, and selective section regeneration
+- Flashcard confidence scoring and deterministic spaced repetition queue
+- SSRF web crawler protections and prompt-injection neutralization
+- Health probes, auth isolation, and in-memory sliding window rate limiters
 
 ### 4. Run Linters
 ```bash
