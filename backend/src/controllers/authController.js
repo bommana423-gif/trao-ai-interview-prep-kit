@@ -7,7 +7,7 @@ import config from '../config/env.js';
 const getCookieOptions = () => ({
   httpOnly: true,
   secure: config.isProduction, // Secure only over HTTPS in production
-  sameSite: 'lax',
+  sameSite: 'none',
   maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in ms
 });
 
@@ -120,7 +120,7 @@ export const logout = (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
     secure: config.isProduction,
-    sameSite: 'lax'
+    sameSite: 'none'
   });
 
   res.status(200).json({
