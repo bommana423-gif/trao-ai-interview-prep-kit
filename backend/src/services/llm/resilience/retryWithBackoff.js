@@ -48,28 +48,78 @@ export async function executeWithRetry(operation, options = {}) {
     } catch (error) {
       attempt++;
 
+      // 1. Immediately fail permanent non-retryable errors
+      const isPermanentError =
+        error.name === 'SchemaValidationError' ||
+        error.isDailyQuota === true ||
+        error.exhausted === true ||
+        error.statusCode === 400 ||
+        error.status === 400 ||
+        error.statusCode === 401 ||
+        error.status === 401 ||
+        error.statusCode === 403 ||
+        error.status === 403 ||
+        error.statusCode === 404 ||
+        error.status === 404 ||
+        (error.message && (
+          error.message.includes('GenerateRequestsPerDay') ||
+          error.message.toLowerCase().includes('daily quota') ||
+          error.message.toLowerCase().includes('perday') ||
+          error.message.toLowerCase().includes('per day') ||
+          error.message.toLowerCase().includes('api_key') ||
+          error.message.toLowerCase().includes('api key') ||
+          error.message.toLowerCase().includes('permission denied') ||
+          error.message.toLowerCase().includes('unauthorized') ||
+          error.message.toLowerCase().includes('invalid argument')
+        ));
+
+      if (isPermanentError) {
+        throw error;
+      }
+
       const isRateLimit = 
         error.statusCode === 429 || 
         error.status === 429 || 
         (error.message && error.message.toLowerCase().includes('rate limit')) ||
-        (error.message && error.message.toLowerCase().includes('quota'));
+        (error.message && error.message.toLowerCase().includes('quota')) ||
+        (error.message && error.message.toLowerCase().includes('resource_exhausted'));
 
       const isServerError = 
         (error.statusCode >= 500 && error.statusCode < 600) ||
         (error.status >= 500 && error.status < 600) ||
         error.code === 'ECONNRESET' ||
-        error.code === 'ETIMEDOUT';
+        error.code === 'ETIMEDOUT' ||
+        error.code === 'UND_ERR_CONNECT_TIMEOUT' ||
+        error.name === 'AbortError' ||
+        error.name === 'TimeoutError' ||
+        (error.message && (
+          error.message.includes('503') ||
+          error.message.includes('500') ||
+          error.message.includes('502') ||
+          error.message.includes('504') ||
+          error.message.toLowerCase().includes('service error') ||
+          error.message.toLowerCase().includes('service unavailable') ||
+          error.message.toLowerCase().includes('high demand') ||
+          error.message.toLowerCase().includes('overloaded') ||
+          error.message.toLowerCase().includes('temporary') ||
+          error.message.toLowerCase().includes('spikes in demand') ||
+          error.message.toLowerCase().includes('fetch failed') ||
+          error.message.toLowerCase().includes('network error')
+        ));
 
-      const isRetryable = isRateLimit || isServerError;
+      const isParseError = error.name === 'JsonParseError';
+
+      const isRetryable = isRateLimit || isServerError || isParseError;
 
       if (!isRetryable || attempt > maxRetries) {
+        error.exhausted = true;
         throw error;
       }
 
       // Determine delay
       let delayMs;
       if (isRateLimit && error.retryAfterSeconds) {
-        delayMs = error.retryAfterSeconds * 1000;
+        delayMs = Math.min(error.retryAfterSeconds * 1000, maxDelayMs);
       } else {
         const exponentialDelay = baseDelayMs * Math.pow(2, attempt - 1);
         const jitter = Math.floor(Math.random() * jitterMs);

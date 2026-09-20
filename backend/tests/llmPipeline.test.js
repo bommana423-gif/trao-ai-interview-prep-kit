@@ -1,8 +1,13 @@
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert';
 import { MockLlmProvider } from '../src/services/llm/providers/mockProvider.js';
+import { GeminiProvider } from '../src/services/llm/providers/geminiProvider.js';
 import { setGlobalProvider, clearGlobalProviderOverride } from '../src/services/llm/providers/providerFactory.js';
-import { executeWithRetry, ProviderRateLimitError } from '../src/services/llm/resilience/retryWithBackoff.js';
+import {
+  executeWithRetry,
+  ProviderRateLimitError,
+  ProviderServiceError
+} from '../src/services/llm/resilience/retryWithBackoff.js';
 import { parseLlmJson, extractJsonString, sanitizeJsonString } from '../src/services/llm/resilience/jsonParser.js';
 import {
   validateRequirements,
@@ -61,6 +66,374 @@ describe('LLM Pipeline - Resilience & JSON Repair', () => {
     assert.strictEqual(result.success, true);
     assert.strictEqual(result.attemptsTaken, 3);
     assert.strictEqual(retryHistory.length, 2);
+  });
+
+  it('retries with exponential backoff on simulated 503 high demand errors and succeeds', async () => {
+    let attempts = 0;
+    const retryHistory = [];
+
+    const result = await executeWithRetry(
+      async () => {
+        attempts++;
+        if (attempts < 3) {
+          throw new ProviderServiceError(
+            'Gemini 503 Service Error: "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."',
+            503
+          );
+        }
+        return { success: true, attemptsTaken: attempts };
+      },
+      {
+        maxRetries: 3,
+        baseDelayMs: 15,
+        jitterMs: 5,
+        onRetry: (info) => {
+          retryHistory.push(info.attempt);
+        }
+      }
+    );
+
+    assert.strictEqual(result.success, true);
+    assert.strictEqual(result.attemptsTaken, 3);
+    assert.strictEqual(retryHistory.length, 2);
+  });
+
+  it('does not retry permanent HTTP 400 or HTTP 401 errors or SchemaValidationErrors', async () => {
+    // 400 Bad Request
+    let count400 = 0;
+    await assert.rejects(
+      async () => {
+        await executeWithRetry(
+          async () => {
+            count400++;
+            const err = new Error('Gemini API error (HTTP 400): Invalid argument');
+            err.statusCode = 400;
+            throw err;
+          },
+          { maxRetries: 3, baseDelayMs: 10 }
+        );
+      },
+      (err) => {
+        return err.statusCode === 400;
+      }
+    );
+    assert.strictEqual(count400, 1, 'Should not retry HTTP 400');
+
+    // 401 Invalid API Key
+    let count401 = 0;
+    await assert.rejects(
+      async () => {
+        await executeWithRetry(
+          async () => {
+            count401++;
+            const err = new Error('API key not valid. Please pass a valid API key.');
+            err.statusCode = 401;
+            throw err;
+          },
+          { maxRetries: 3, baseDelayMs: 10 }
+        );
+      },
+      (err) => {
+        return err.statusCode === 401;
+      }
+    );
+    assert.strictEqual(count401, 1, 'Should not retry HTTP 401');
+
+    // SchemaValidationError
+    let countSchema = 0;
+    await assert.rejects(
+      async () => {
+        await executeWithRetry(
+          async () => {
+            countSchema++;
+            throw new SchemaValidationError('Missing required field in kit');
+          },
+          { maxRetries: 3, baseDelayMs: 10 }
+        );
+      },
+      (err) => {
+        return err instanceof SchemaValidationError;
+      }
+    );
+    assert.strictEqual(countSchema, 1, 'Should not retry SchemaValidationError');
+  });
+
+  it('GeminiProvider retries on transient HTTP 503 (model high demand) and succeeds with valid output', async () => {
+    let callCount = 0;
+    const requestedUrls = [];
+    const requestedHeaders = [];
+
+    const mockFetch = async (url, options) => {
+      callCount++;
+      requestedUrls.push(url);
+      requestedHeaders.push(options.headers);
+
+      if (callCount < 3) {
+        return {
+          ok: false,
+          status: 503,
+          text: async () => {
+            return 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.';
+          }
+        };
+      }
+
+      return {
+        ok: true,
+        status: 200,
+        json: async () => {
+          return {
+            candidates: [
+              {
+                content: {
+                  parts: [{ text: JSON.stringify({ status: 'recovered' }) }]
+                }
+              }
+            ],
+            usageMetadata: {
+              promptTokenCount: 15,
+              candidatesTokenCount: 25
+            }
+          };
+        }
+      };
+    };
+
+    const provider = new GeminiProvider('secret-gemini-key-123', 'gemini-1.5-flash', {
+      fetch: mockFetch,
+      maxRetries: 3,
+      baseDelayMs: 10,
+      jitterMs: 5
+    });
+
+    const result = await provider.generate({
+      userPrompt: 'Hello',
+      responseFormat: 'json'
+    });
+
+    assert.strictEqual(callCount, 3);
+    assert.strictEqual(result.content, JSON.stringify({ status: 'recovered' }));
+    assert.strictEqual(result.usage.promptTokens, 15);
+    assert.strictEqual(result.usage.completionTokens, 25);
+
+    // Verify API key security: passed in header, NEVER in URL
+    assert.strictEqual(requestedUrls[0].includes('secret-gemini-key-123'), false);
+    assert.strictEqual(requestedHeaders[0]['x-goog-api-key'], 'secret-gemini-key-123');
+  });
+
+  it('GeminiProvider does not retry permanent 400 error and redacts API key from error message', async () => {
+    let callCount = 0;
+    const mockFetch = async () => {
+      callCount++;
+      return {
+        ok: false,
+        status: 400,
+        text: async () => {
+          return 'Invalid argument provided with secret-gemini-key-123';
+        }
+      };
+    };
+
+    const provider = new GeminiProvider('secret-gemini-key-123', 'gemini-1.5-flash', {
+      fetch: mockFetch,
+      maxRetries: 3,
+      baseDelayMs: 10
+    });
+
+    await assert.rejects(
+      async () => {
+        await provider.generate({ userPrompt: 'Hello' });
+      },
+      (err) => {
+        assert.strictEqual(err.statusCode, 400);
+        // Ensure secret key is redacted
+        assert.strictEqual(err.message.includes('secret-gemini-key-123'), false);
+        assert.strictEqual(err.message.includes('[REDACTED]'), true);
+        return true;
+      }
+    );
+
+    assert.strictEqual(callCount, 1, 'Permanent 400 error should not trigger retries');
+  });
+
+  it('GeminiProvider fast-fails daily quota exhaustion (GenerateRequestsPerDayPerProject-FreeTier) with user-facing message and zero retries', async () => {
+    let callCount = 0;
+    const dailyQuotaPayload = JSON.stringify({
+      error: {
+        code: 429,
+        message: 'Resource has been exhausted (e.g. check quota).',
+        status: 'RESOURCE_EXHAUSTED',
+        details: [
+          {
+            '@type': 'type.googleapis.com/google.rpc.QuotaFailure',
+            violations: [
+              {
+                subject: 'GenerateRequestsPerDayPerProject-FreeTier',
+                description: "Quota exceeded for quota metric 'Generate content requests' and limit 'Generate content requests per day per project'"
+              }
+            ]
+          },
+          {
+            '@type': 'type.googleapis.com/google.rpc.RetryInfo',
+            retryDelay: '18s'
+          }
+        ]
+      }
+    });
+
+    const mockFetch = async () => {
+      callCount++;
+      return {
+        ok: false,
+        status: 429,
+        text: async () => {
+          return dailyQuotaPayload;
+        }
+      };
+    };
+
+    const provider = new GeminiProvider('secret-key-123', 'gemini-1.5-flash', {
+      fetch: mockFetch,
+      maxRetries: 3,
+      baseDelayMs: 10
+    });
+
+    await assert.rejects(
+      async () => {
+        await provider.generate({ userPrompt: 'Hello' });
+      },
+      (err) => {
+        assert.strictEqual(err.statusCode, 429);
+        assert.strictEqual(err.isDailyQuota, true);
+        assert.strictEqual(err.exhausted, true);
+        assert.strictEqual(err.message.includes('daily quota exhausted'), true);
+        assert.strictEqual(err.message.includes('GenerateRequestsPerDayPerProject'), true);
+        return true;
+      }
+    );
+
+    assert.strictEqual(callCount, 1, 'Daily quota exhaustion must NOT be retried');
+  });
+
+  it('GeminiProvider respects server-provided RetryInfo delay on transient 429 and succeeds', async () => {
+    let callCount = 0;
+    const transientQuotaPayload = JSON.stringify({
+      error: {
+        code: 429,
+        message: 'Resource has been exhausted',
+        status: 'RESOURCE_EXHAUSTED',
+        details: [
+          {
+            '@type': 'type.googleapis.com/google.rpc.RetryInfo',
+            retryDelay: '0.02s'
+          }
+        ]
+      }
+    });
+
+    const mockFetch = async () => {
+      callCount++;
+      if (callCount === 1) {
+        return {
+          ok: false,
+          status: 429,
+          text: async () => {
+            return transientQuotaPayload;
+          }
+        };
+      }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => {
+          return {
+            candidates: [
+              {
+                content: {
+                  parts: [{ text: JSON.stringify({ status: 'transient_recovered' }) }]
+                }
+              }
+            ]
+          };
+        }
+      };
+    };
+
+    const provider = new GeminiProvider('secret-key-123', 'gemini-1.5-flash', {
+      fetch: mockFetch,
+      maxRetries: 2,
+      baseDelayMs: 10
+    });
+
+    const result = await provider.generate({ userPrompt: 'Hello' });
+    assert.strictEqual(callCount, 2);
+    assert.strictEqual(result.content, JSON.stringify({ status: 'transient_recovered' }));
+  });
+
+  it('repairs missing commas between array elements (regression: Expected comma or bracket after array element)', () => {
+    // Exact failure pattern where Gemini omits comma between array objects (e.g. at line 73 column 6)
+    const malformedGeminiOutput = `{
+  "questions": [
+    {
+      "id": "q-tech-1",
+      "question": "How do you scale Kafka?",
+      "targetRequirementIds": ["req-tech-1"],
+      "difficulty": "SENIOR"
+    }
+    {
+      "id": "q-tech-2",
+      "question": "Explain Redis caching strategies.",
+      "targetRequirementIds": ["req-tech-2"],
+      "difficulty": "MID"
+    }
+  ]
+}`;
+
+    // Standard JSON.parse MUST fail on this input
+    assert.throws(() => JSON.parse(malformedGeminiOutput), /Expected ',' or ']' after array element/);
+
+    // Our resilient parseLlmJson MUST repair and parse it cleanly
+    const parsed = parseLlmJson(malformedGeminiOutput);
+    assert.strictEqual(parsed.questions.length, 2);
+    assert.strictEqual(parsed.questions[0].id, 'q-tech-1');
+    assert.strictEqual(parsed.questions[1].id, 'q-tech-2');
+  });
+
+  it('repairs missing commas between array strings and object properties', () => {
+    const malformedStringsAndProps = `{
+  "targetRequirementIds": [
+    "req-tech-1"
+    "req-tech-2"
+    "req-domain-1"
+  ]
+  "difficulty": "STAFF"
+}`;
+    const parsed = parseLlmJson(malformedStringsAndProps);
+    assert.deepStrictEqual(parsed.targetRequirementIds, ['req-tech-1', 'req-tech-2', 'req-domain-1']);
+    assert.strictEqual(parsed.difficulty, 'STAFF');
+  });
+
+  it('strips comments and repairs unescaped newlines and inner quotes', () => {
+    const malformedWithCommentsAndQuotes = `{
+  "items": [
+    // Primary item
+    {
+      "id": "q-1",
+      "question": "How to use the "saga" pattern?",
+      "notes": "First line\\nSecond line"
+    }
+  ]
+}`;
+    const parsed = parseLlmJson(malformedWithCommentsAndQuotes);
+    assert.strictEqual(parsed.items.length, 1);
+    assert.strictEqual(parsed.items[0].id, 'q-1');
+  });
+
+  it('auto-closes truncated JSON missing closing brackets', () => {
+    const truncated = `{\n  "questions": [\n    {"id": "q-1", "question": "Explain microservices"}\n`;
+    const parsed = parseLlmJson(truncated);
+    assert.strictEqual(parsed.questions.length, 1);
+    assert.strictEqual(parsed.questions[0].id, 'q-1');
   });
 });
 

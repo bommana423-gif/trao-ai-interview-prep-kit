@@ -38,6 +38,32 @@ export const errorHandler = (err, req, res, _next) => {
     error = new AppError('Validation Error', 400, details);
   }
 
+  // Handle LLM / Gemini Rate Limit & Quota Exhaustion
+  if (
+    err.name === 'ProviderRateLimitError' ||
+    err.statusCode === 429 ||
+    err.isDailyQuota === true ||
+    (err.message && (
+      err.message.includes('GenerateRequestsPerDay') ||
+      err.message.includes('RESOURCE_EXHAUSTED') ||
+      err.message.toLowerCase().includes('quota exhausted')
+    ))
+  ) {
+    error.statusCode = 429;
+    error.status = 'fail';
+    if (
+      err.isDailyQuota ||
+      (err.message && (
+        err.message.includes('GenerateRequestsPerDay') ||
+        err.message.includes('RESOURCE_EXHAUSTED')
+      ))
+    ) {
+      if (!err.message.includes('daily quota exhausted')) {
+        error.message = 'Gemini API daily quota exhausted (GenerateRequestsPerDayPerProject limit reached). Please try again tomorrow, upgrade your Gemini API quota, or use the mock provider.';
+      }
+    }
+  }
+
   // Standardized JSON response envelope
   const responsePayload = {
     success: false,
