@@ -4,7 +4,9 @@ node_modules/
 .pnp.js
 
 # Testing & Coverage
-coverage/
+/coverage/
+backend/coverage/
+frontend/coverage/
 .nyc_output/
 
 # Next.js build output
