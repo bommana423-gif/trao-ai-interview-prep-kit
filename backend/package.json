@@ -1,0 +1,38 @@
+{
+  "name": "trao-prep-kit-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Trao AI Interview Prep Kit",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "lint": "eslint src/",
+    "test": "node --test tests/health.test.js tests/auth.test.js tests/crawler.test.js tests/llmPipeline.test.js tests/coverage.test.js tests/scheduler.test.js tests/editor.test.js tests/practice.test.js tests/evaluator.test.js tests/rateLimiter.test.js",
+    "evaluate": "node src/scripts/evaluate.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cheerio": "^1.2.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.9.5",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "globals": "^15.14.0"
+  },
+  "keywords": [
+    "trao",
+    "interview-prep",
+    "express",
+    "mongodb"
+  ],
+  "license": "ISC"
+}

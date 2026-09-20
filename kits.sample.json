@@ -1,0 +1,1971 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-09-20T04:40:15.087Z",
+  "kits": [
+    {
+      "id": "case-01",
+      "status": "ok",
+      "kit": {
+        "targetRole": "Software Engineer",
+        "targetCompany": "Stripe",
+        "companyUrl": "https://stripe.com",
+        "jobDescriptionRaw": "Staff Distributed Systems Engineer. You will design and operate high-throughput event-driven microservices processing 100k+ transactions/sec using Node.js, Apache Kafka, and PostgreSQL. Must have 7+ years backend experience, proven track record in distributed data consistency (idempotency, saga patterns), and strong engineering mentorship skills. Nice to have: Kubernetes and multi-region disaster recovery.",
+        "candidateResumeRaw": "",
+        "requirements": [
+          {
+            "id": "req-tech-1",
+            "text": "Distributed systems engineering with Node.js and microservices",
+            "kind": "technical",
+            "priority": "must-have",
+            "sourceSnippet": "Must have 5+ years building backend microservices with Node.js and Express"
+          },
+          {
+            "id": "req-tech-2",
+            "text": "High-throughput event streaming with Apache Kafka",
+            "kind": "technical",
+            "priority": "must-have",
+            "sourceSnippet": "Experience with Kafka topic partitioning and consumer group rebalancing"
+          },
+          {
+            "id": "req-domain-1",
+            "text": "High-concurrency payment and transaction processing",
+            "kind": "domain",
+            "priority": "nice-to-have",
+            "sourceSnippet": "Familiarity with idempotent payment gateways and ledger reconciliation"
+          },
+          {
+            "id": "req-behav-1",
+            "text": "Cross-functional engineering leadership and technical mentorship",
+            "kind": "behavioral",
+            "priority": "must-have",
+            "sourceSnippet": "Proven ability to mentor junior engineers and coordinate cross-team architectures"
+          }
+        ],
+        "isSparseJd": false,
+        "insufficientInfoNotes": null,
+        "companyBrief": {
+          "overview": "Acme Corp is an enterprise cloud payment infrastructure provider powering high-volume online checkouts globally.",
+          "missionValues": [
+            "Developer-first reliability and transparency",
+            "Relentless optimization for sub-50ms latency",
+            "Customer trust and zero financial inaccuracies"
+          ],
+          "techStack": [
+            "Node.js",
+            "Go",
+            "Kafka",
+            "PostgreSQL",
+            "Docker",
+            "Kubernetes"
+          ],
+          "products": [
+            "Acme Ledger",
+            "Checkout Gateway",
+            "Fraud Shield AI"
+          ],
+          "interviewCulture": "Rigorous engineering interviews focusing on architecture, edge cases, distributed concurrency, and proactive system resilience.",
+          "sourceAttribution": [
+            "https://example.com/about",
+            "https://example.com/careers"
+          ]
+        },
+        "roleBreakdown": {
+          "title": "Senior Backend Engineer",
+          "seniority": "Senior",
+          "coreFocus": "Designing and scaling event-driven transaction pipelines and fault-tolerant payment APIs",
+          "dayToDayResponsibilities": [
+            "Architect event-driven pipelines using Node.js and Kafka",
+            "Ensure 99.999% uptime for transaction processing endpoints",
+            "Participate in on-call rotation and lead root-cause analyses",
+            "Mentor junior and mid-level developers"
+          ],
+          "primaryChallenges": [
+            "Eliminating duplicate transaction processing during network partitions",
+            "Managing database failover latency and Kafka partition rebalancing"
+          ],
+          "successCriteria": [
+            "Deliver zero-loss message processing pipeline within first 90 days",
+            "Decrease end-to-end API response times by 25%"
+          ]
+        },
+        "systemDesignApplicable": true,
+        "systemDesignReason": "Role requires distributed architecture and scalability assessment.",
+        "questions": {
+          "technical": [
+            {
+              "id": "q-tech-1",
+              "question": "How do you design Kafka consumer groups in Node.js to prevent data loss or duplicate processing during partition rebalances?",
+              "targetRequirementIds": [
+                "req-tech-1",
+                "req-tech-2"
+              ],
+              "category": "TECHNICAL_DEEP_DIVE",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 20,
+              "answerFramework": {
+                "approach": "Explain cooperative sticky partition assignor and explicit offset commit strategies",
+                "keyPointsToCover": [
+                  "Cooperative sticky assignor",
+                  "Manual commit after idempotent processing",
+                  "Heartbeat configuration"
+                ],
+                "commonTraps": [
+                  "Using auto-commit or stopping world during rebalance"
+                ]
+              },
+              "rubric": {
+                "criteria": "Kafka distributed streaming internals and transaction idempotency in Node.js",
+                "level1Deficient": "Unaware of partition rebalancing or uses naive auto-commit with no error handling",
+                "level3Acceptable": "Explains manual offset commit after processing and consumer heartbeat timeouts",
+                "level5Exceptional": "Proposes cooperative rebalance protocol, static membership (group.instance.id), and out-of-band dead letter queues"
+              },
+              "followUpProbes": [
+                "What happens if max.poll.interval.ms is exceeded during batch execution?"
+              ]
+            }
+          ],
+          "behavioral": [
+            {
+              "id": "q-behav-1",
+              "question": "Describe a situation where you had to push back on a high-priority product deadline because technical debt posed severe production risk.",
+              "targetRequirementIds": [
+                "req-behav-1"
+              ],
+              "category": "BEHAVIORAL",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 15,
+              "answerFramework": {
+                "approach": "Use STAR method: explain quantified risk, stakeholder alignment, and phased compromise",
+                "keyPointsToCover": [
+                  "Objective data/metrics",
+                  "Stakeholder empathy",
+                  "Collaborative mitigation plan"
+                ],
+                "commonTraps": [
+                  "Blaming product managers or refusing to compromise"
+                ]
+              },
+              "rubric": {
+                "criteria": "Technical communication, conflict resolution, and risk prioritization",
+                "level1Deficient": "Passive aggressive or uncompromising; cannot communicate risk in business terms",
+                "level3Acceptable": "Explains the technical risk clearly and proposed a reasonable time extension",
+                "level5Exceptional": "Quantified downtime cost, decoupled release into safe phases, and built alignment without sacrificing quality"
+              },
+              "followUpProbes": [
+                "How did you maintain developer team morale during that crunch period?"
+              ]
+            }
+          ],
+          "systemDesign": [
+            {
+              "id": "q-sys-1",
+              "question": "Design a globally distributed payment ledger that guarantees exactly-once transaction processing and sub-100ms response times under 50,000 TPS.",
+              "targetRequirementIds": [
+                "req-tech-1",
+                "req-tech-2"
+              ],
+              "category": "SYSTEM_DESIGN",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 30,
+              "answerFramework": {
+                "approach": "Outline functional and non-functional requirements, data model, consensus/partitioning, and failure recovery",
+                "keyPointsToCover": [
+                  "Idempotency keys with Redis distributed locks",
+                  "Two-phase commit vs Saga orchestrator",
+                  "Partitioning by account ID",
+                  "Read replicas vs event sourcing"
+                ],
+                "commonTraps": [
+                  "Relying on distributed ACID transactions across regions without discussing CAP theorem trade-offs"
+                ]
+              },
+              "rubric": {
+                "criteria": "Distributed ledger architecture, idempotency, consensus, and horizontal scalability",
+                "level1Deficient": "Single relational database with synchronous locks; fails to handle network partitions",
+                "level3Acceptable": "Proposes sharded database with idempotency keys and asynchronous event publishing",
+                "level5Exceptional": "Comprehensive Saga pattern, outbox pattern for DB-Kafka consistency, Raft consensus for state, and clear partition strategies"
+              },
+              "followUpProbes": [
+                "How does your ledger handle network split-brain scenarios between EU and US data centers?"
+              ]
+            }
+          ],
+          "companyFit": [
+            {
+              "id": "q-fit-1",
+              "question": "Acme powers financial checkouts where downtime directly causes revenue loss for merchants. How do you approach production observability and proactive failure detection?",
+              "targetRequirementIds": [
+                "req-domain-1",
+                "req-tech-1"
+              ],
+              "category": "COMPANY_SPECIFIC",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 15,
+              "answerFramework": {
+                "approach": "Connect personal monitoring philosophy with Acme mission of developer-first reliability",
+                "keyPointsToCover": [
+                  "SLIs/SLOs",
+                  "Distributed tracing (OpenTelemetry)",
+                  "Canary deployments",
+                  "Chaos engineering"
+                ],
+                "commonTraps": [
+                  "Listing passive log tools without discussing proactive alerting or MTTR reduction"
+                ]
+              },
+              "rubric": {
+                "criteria": "Alignment with high-reliability payment infrastructure values",
+                "level1Deficient": "Only checks logs after customer complaints occur",
+                "level3Acceptable": "Discusses APM alerts, Prometheus metrics, and automated rollback thresholds",
+                "level5Exceptional": "Demonstrates deep empathy for merchant revenue impact, proactive chaos drills, and synthetic transaction probes"
+              },
+              "followUpProbes": [
+                "How do you balance aggressive feature delivery with stringent zero-downtime requirements?"
+              ]
+            }
+          ]
+        },
+        "modules": [
+          {
+            "moduleId": "mod-tech",
+            "title": "Technical Deep Dive",
+            "type": "TECHNICAL",
+            "priority": "CRITICAL",
+            "questions": [
+              {
+                "questionId": "q-tech-1",
+                "prompt": "How do you design Kafka consumer groups in Node.js to prevent data loss or duplicate processing during partition rebalances?",
+                "category": "TECHNICAL_DEEP_DIVE",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-tech-1",
+                  "req-tech-2"
+                ],
+                "estimatedMinutes": 20,
+                "answerFramework": {
+                  "approach": "Explain cooperative sticky partition assignor and explicit offset commit strategies",
+                  "keyPointsToCover": [
+                    "Cooperative sticky assignor",
+                    "Manual commit after idempotent processing",
+                    "Heartbeat configuration"
+                  ],
+                  "commonTraps": [
+                    "Using auto-commit or stopping world during rebalance"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Kafka distributed streaming internals and transaction idempotency in Node.js",
+                  "level1Deficient": "Unaware of partition rebalancing or uses naive auto-commit with no error handling",
+                  "level3Acceptable": "Explains manual offset commit after processing and consumer heartbeat timeouts",
+                  "level5Exceptional": "Proposes cooperative rebalance protocol, static membership (group.instance.id), and out-of-band dead letter queues"
+                },
+                "followUpProbes": [
+                  "What happens if max.poll.interval.ms is exceeded during batch execution?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-behav",
+            "title": "Behavioral & Leadership",
+            "type": "BEHAVIORAL",
+            "priority": "HIGH",
+            "questions": [
+              {
+                "questionId": "q-behav-1",
+                "prompt": "Describe a situation where you had to push back on a high-priority product deadline because technical debt posed severe production risk.",
+                "category": "BEHAVIORAL",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-behav-1"
+                ],
+                "estimatedMinutes": 15,
+                "answerFramework": {
+                  "approach": "Use STAR method: explain quantified risk, stakeholder alignment, and phased compromise",
+                  "keyPointsToCover": [
+                    "Objective data/metrics",
+                    "Stakeholder empathy",
+                    "Collaborative mitigation plan"
+                  ],
+                  "commonTraps": [
+                    "Blaming product managers or refusing to compromise"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Technical communication, conflict resolution, and risk prioritization",
+                  "level1Deficient": "Passive aggressive or uncompromising; cannot communicate risk in business terms",
+                  "level3Acceptable": "Explains the technical risk clearly and proposed a reasonable time extension",
+                  "level5Exceptional": "Quantified downtime cost, decoupled release into safe phases, and built alignment without sacrificing quality"
+                },
+                "followUpProbes": [
+                  "How did you maintain developer team morale during that crunch period?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-sys",
+            "title": "System Design & Architecture",
+            "type": "SYSTEM_DESIGN",
+            "priority": "HIGH",
+            "questions": [
+              {
+                "questionId": "q-sys-1",
+                "prompt": "Design a globally distributed payment ledger that guarantees exactly-once transaction processing and sub-100ms response times under 50,000 TPS.",
+                "category": "SYSTEM_DESIGN",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-tech-1",
+                  "req-tech-2"
+                ],
+                "estimatedMinutes": 30,
+                "answerFramework": {
+                  "approach": "Outline functional and non-functional requirements, data model, consensus/partitioning, and failure recovery",
+                  "keyPointsToCover": [
+                    "Idempotency keys with Redis distributed locks",
+                    "Two-phase commit vs Saga orchestrator",
+                    "Partitioning by account ID",
+                    "Read replicas vs event sourcing"
+                  ],
+                  "commonTraps": [
+                    "Relying on distributed ACID transactions across regions without discussing CAP theorem trade-offs"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Distributed ledger architecture, idempotency, consensus, and horizontal scalability",
+                  "level1Deficient": "Single relational database with synchronous locks; fails to handle network partitions",
+                  "level3Acceptable": "Proposes sharded database with idempotency keys and asynchronous event publishing",
+                  "level5Exceptional": "Comprehensive Saga pattern, outbox pattern for DB-Kafka consistency, Raft consensus for state, and clear partition strategies"
+                },
+                "followUpProbes": [
+                  "How does your ledger handle network split-brain scenarios between EU and US data centers?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-fit",
+            "title": "Company Alignment & Culture",
+            "type": "COMPANY_SPECIFIC",
+            "priority": "MEDIUM",
+            "questions": [
+              {
+                "questionId": "q-fit-1",
+                "prompt": "Acme powers financial checkouts where downtime directly causes revenue loss for merchants. How do you approach production observability and proactive failure detection?",
+                "category": "TECHNICAL_DEEP_DIVE",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-domain-1",
+                  "req-tech-1"
+                ],
+                "estimatedMinutes": 15,
+                "answerFramework": {
+                  "approach": "Connect personal monitoring philosophy with Acme mission of developer-first reliability",
+                  "keyPointsToCover": [
+                    "SLIs/SLOs",
+                    "Distributed tracing (OpenTelemetry)",
+                    "Canary deployments",
+                    "Chaos engineering"
+                  ],
+                  "commonTraps": [
+                    "Listing passive log tools without discussing proactive alerting or MTTR reduction"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Alignment with high-reliability payment infrastructure values",
+                  "level1Deficient": "Only checks logs after customer complaints occur",
+                  "level3Acceptable": "Discusses APM alerts, Prometheus metrics, and automated rollback thresholds",
+                  "level5Exceptional": "Demonstrates deep empathy for merchant revenue impact, proactive chaos drills, and synthetic transaction probes"
+                },
+                "followUpProbes": [
+                  "How do you balance aggressive feature delivery with stringent zero-downtime requirements?"
+                ]
+              }
+            ]
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "fc-1",
+            "targetRequirementId": "req-tech-2",
+            "category": "DISTRIBUTED_STREAMING",
+            "frontPrompt": "What is the key difference between Kafka Eager Rebalancing and Cooperative Sticky Rebalancing?",
+            "backKeyPoints": [
+              "Eager rebalancing revokes all partitions from all consumers, causing a \"stop-the-world\" pause.",
+              "Cooperative Sticky Rebalancing revokes only the specific partitions being moved, allowing other consumers to keep processing uninterrupted.",
+              "Configured via partition.assignment.strategy in modern Kafka clients."
+            ],
+            "quickTip": "Always mention CooperativeStickyAssignor in senior backend interviews to show modern production awareness."
+          },
+          {
+            "id": "fc-2",
+            "targetRequirementId": "req-tech-1",
+            "category": "NODEJS_INTERNALS",
+            "frontPrompt": "How do you prevent Node.js Event Loop starvation during CPU-heavy operations?",
+            "backKeyPoints": [
+              "Offload computation to Worker Threads or external microservices.",
+              "Partition heavy loops using setImmediate() or process.nextTick() chunking.",
+              "Never perform synchronous cryptographic or compression calls in request handling paths."
+            ],
+            "quickTip": "Point out that Node.js is single-threaded for execution but utilizes libuv thread pool for async I/O."
+          }
+        ],
+        "coverageScore": 100,
+        "uncoveredGaps": [],
+        "remediationStatus": "FULL_COVERAGE",
+        "schedule": [
+          {
+            "day": 1,
+            "focus": "Distributed Architecture, Scalability & Failure Modes",
+            "question_ids": [
+              "q-sys-1"
+            ],
+            "allocatedMinutes": 30,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": false
+          },
+          {
+            "day": 2,
+            "focus": "Deep Dive: How do you design Kafka consumer groups in No...",
+            "question_ids": [
+              "q-tech-1"
+            ],
+            "allocatedMinutes": 20,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": false
+          },
+          {
+            "day": 3,
+            "focus": "Leadership, STAR Stories & Conflict Resolution Mastery",
+            "question_ids": [
+              "q-behav-1"
+            ],
+            "allocatedMinutes": 15,
+            "mustHaveCoverage": [
+              "req-behav-1"
+            ],
+            "isReviewDay": false
+          },
+          {
+            "day": 4,
+            "focus": "Spaced Review & Speed Recall: COMPANY_SPECIFIC & SYSTEM_DESIGN",
+            "question_ids": [
+              "q-fit-1",
+              "q-sys-1"
+            ],
+            "allocatedMinutes": 27,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 5,
+            "focus": "Spaced Review & Speed Recall: TECHNICAL_DEEP_DIVE",
+            "question_ids": [
+              "q-tech-1"
+            ],
+            "allocatedMinutes": 12,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": true
+          }
+        ],
+        "generatedAt": "2026-09-20T04:40:10.348Z"
+      },
+      "error": null
+    },
+    {
+      "id": "case-02",
+      "status": "ok",
+      "kit": {
+        "targetRole": "Software Engineer",
+        "targetCompany": "Localhost Test Company",
+        "companyUrl": "http://localhost:3000",
+        "jobDescriptionRaw": "Senior Frontend Engineer. Build highly responsive, accessible web applications using React, Next.js, TypeScript, and Tailwind CSS. Deep experience optimizing Core Web Vitals (LCP, INP, CLS), modern state management, client-side caching, and comprehensive unit testing.",
+        "candidateResumeRaw": "",
+        "requirements": [
+          {
+            "id": "req-tech-1",
+            "text": "Distributed systems engineering with Node.js and microservices",
+            "kind": "technical",
+            "priority": "must-have",
+            "sourceSnippet": "Must have 5+ years building backend microservices with Node.js and Express"
+          },
+          {
+            "id": "req-tech-2",
+            "text": "High-throughput event streaming with Apache Kafka",
+            "kind": "technical",
+            "priority": "must-have",
+            "sourceSnippet": "Experience with Kafka topic partitioning and consumer group rebalancing"
+          },
+          {
+            "id": "req-domain-1",
+            "text": "High-concurrency payment and transaction processing",
+            "kind": "domain",
+            "priority": "nice-to-have",
+            "sourceSnippet": "Familiarity with idempotent payment gateways and ledger reconciliation"
+          },
+          {
+            "id": "req-behav-1",
+            "text": "Cross-functional engineering leadership and technical mentorship",
+            "kind": "behavioral",
+            "priority": "must-have",
+            "sourceSnippet": "Proven ability to mentor junior engineers and coordinate cross-team architectures"
+          }
+        ],
+        "isSparseJd": false,
+        "insufficientInfoNotes": null,
+        "companyBrief": {
+          "overview": "Acme Corp is an enterprise cloud payment infrastructure provider powering high-volume online checkouts globally.",
+          "missionValues": [
+            "Developer-first reliability and transparency",
+            "Relentless optimization for sub-50ms latency",
+            "Customer trust and zero financial inaccuracies"
+          ],
+          "techStack": [
+            "Node.js",
+            "Go",
+            "Kafka",
+            "PostgreSQL",
+            "Docker",
+            "Kubernetes"
+          ],
+          "products": [
+            "Acme Ledger",
+            "Checkout Gateway",
+            "Fraud Shield AI"
+          ],
+          "interviewCulture": "Rigorous engineering interviews focusing on architecture, edge cases, distributed concurrency, and proactive system resilience.",
+          "sourceAttribution": [
+            "https://example.com/about",
+            "https://example.com/careers"
+          ]
+        },
+        "roleBreakdown": {
+          "title": "Senior Backend Engineer",
+          "seniority": "Senior",
+          "coreFocus": "Designing and scaling event-driven transaction pipelines and fault-tolerant payment APIs",
+          "dayToDayResponsibilities": [
+            "Architect event-driven pipelines using Node.js and Kafka",
+            "Ensure 99.999% uptime for transaction processing endpoints",
+            "Participate in on-call rotation and lead root-cause analyses",
+            "Mentor junior and mid-level developers"
+          ],
+          "primaryChallenges": [
+            "Eliminating duplicate transaction processing during network partitions",
+            "Managing database failover latency and Kafka partition rebalancing"
+          ],
+          "successCriteria": [
+            "Deliver zero-loss message processing pipeline within first 90 days",
+            "Decrease end-to-end API response times by 25%"
+          ]
+        },
+        "systemDesignApplicable": true,
+        "systemDesignReason": "Role requires distributed architecture and scalability assessment.",
+        "questions": {
+          "technical": [
+            {
+              "id": "q-tech-1",
+              "question": "How do you design Kafka consumer groups in Node.js to prevent data loss or duplicate processing during partition rebalances?",
+              "targetRequirementIds": [
+                "req-tech-1",
+                "req-tech-2"
+              ],
+              "category": "TECHNICAL_DEEP_DIVE",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 20,
+              "answerFramework": {
+                "approach": "Explain cooperative sticky partition assignor and explicit offset commit strategies",
+                "keyPointsToCover": [
+                  "Cooperative sticky assignor",
+                  "Manual commit after idempotent processing",
+                  "Heartbeat configuration"
+                ],
+                "commonTraps": [
+                  "Using auto-commit or stopping world during rebalance"
+                ]
+              },
+              "rubric": {
+                "criteria": "Kafka distributed streaming internals and transaction idempotency in Node.js",
+                "level1Deficient": "Unaware of partition rebalancing or uses naive auto-commit with no error handling",
+                "level3Acceptable": "Explains manual offset commit after processing and consumer heartbeat timeouts",
+                "level5Exceptional": "Proposes cooperative rebalance protocol, static membership (group.instance.id), and out-of-band dead letter queues"
+              },
+              "followUpProbes": [
+                "What happens if max.poll.interval.ms is exceeded during batch execution?"
+              ]
+            }
+          ],
+          "behavioral": [
+            {
+              "id": "q-behav-1",
+              "question": "Describe a situation where you had to push back on a high-priority product deadline because technical debt posed severe production risk.",
+              "targetRequirementIds": [
+                "req-behav-1"
+              ],
+              "category": "BEHAVIORAL",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 15,
+              "answerFramework": {
+                "approach": "Use STAR method: explain quantified risk, stakeholder alignment, and phased compromise",
+                "keyPointsToCover": [
+                  "Objective data/metrics",
+                  "Stakeholder empathy",
+                  "Collaborative mitigation plan"
+                ],
+                "commonTraps": [
+                  "Blaming product managers or refusing to compromise"
+                ]
+              },
+              "rubric": {
+                "criteria": "Technical communication, conflict resolution, and risk prioritization",
+                "level1Deficient": "Passive aggressive or uncompromising; cannot communicate risk in business terms",
+                "level3Acceptable": "Explains the technical risk clearly and proposed a reasonable time extension",
+                "level5Exceptional": "Quantified downtime cost, decoupled release into safe phases, and built alignment without sacrificing quality"
+              },
+              "followUpProbes": [
+                "How did you maintain developer team morale during that crunch period?"
+              ]
+            }
+          ],
+          "systemDesign": [
+            {
+              "id": "q-sys-1",
+              "question": "Design a globally distributed payment ledger that guarantees exactly-once transaction processing and sub-100ms response times under 50,000 TPS.",
+              "targetRequirementIds": [
+                "req-tech-1",
+                "req-tech-2"
+              ],
+              "category": "SYSTEM_DESIGN",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 30,
+              "answerFramework": {
+                "approach": "Outline functional and non-functional requirements, data model, consensus/partitioning, and failure recovery",
+                "keyPointsToCover": [
+                  "Idempotency keys with Redis distributed locks",
+                  "Two-phase commit vs Saga orchestrator",
+                  "Partitioning by account ID",
+                  "Read replicas vs event sourcing"
+                ],
+                "commonTraps": [
+                  "Relying on distributed ACID transactions across regions without discussing CAP theorem trade-offs"
+                ]
+              },
+              "rubric": {
+                "criteria": "Distributed ledger architecture, idempotency, consensus, and horizontal scalability",
+                "level1Deficient": "Single relational database with synchronous locks; fails to handle network partitions",
+                "level3Acceptable": "Proposes sharded database with idempotency keys and asynchronous event publishing",
+                "level5Exceptional": "Comprehensive Saga pattern, outbox pattern for DB-Kafka consistency, Raft consensus for state, and clear partition strategies"
+              },
+              "followUpProbes": [
+                "How does your ledger handle network split-brain scenarios between EU and US data centers?"
+              ]
+            }
+          ],
+          "companyFit": [
+            {
+              "id": "q-fit-1",
+              "question": "Acme powers financial checkouts where downtime directly causes revenue loss for merchants. How do you approach production observability and proactive failure detection?",
+              "targetRequirementIds": [
+                "req-domain-1",
+                "req-tech-1"
+              ],
+              "category": "COMPANY_SPECIFIC",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 15,
+              "answerFramework": {
+                "approach": "Connect personal monitoring philosophy with Acme mission of developer-first reliability",
+                "keyPointsToCover": [
+                  "SLIs/SLOs",
+                  "Distributed tracing (OpenTelemetry)",
+                  "Canary deployments",
+                  "Chaos engineering"
+                ],
+                "commonTraps": [
+                  "Listing passive log tools without discussing proactive alerting or MTTR reduction"
+                ]
+              },
+              "rubric": {
+                "criteria": "Alignment with high-reliability payment infrastructure values",
+                "level1Deficient": "Only checks logs after customer complaints occur",
+                "level3Acceptable": "Discusses APM alerts, Prometheus metrics, and automated rollback thresholds",
+                "level5Exceptional": "Demonstrates deep empathy for merchant revenue impact, proactive chaos drills, and synthetic transaction probes"
+              },
+              "followUpProbes": [
+                "How do you balance aggressive feature delivery with stringent zero-downtime requirements?"
+              ]
+            }
+          ]
+        },
+        "modules": [
+          {
+            "moduleId": "mod-tech",
+            "title": "Technical Deep Dive",
+            "type": "TECHNICAL",
+            "priority": "CRITICAL",
+            "questions": [
+              {
+                "questionId": "q-tech-1",
+                "prompt": "How do you design Kafka consumer groups in Node.js to prevent data loss or duplicate processing during partition rebalances?",
+                "category": "TECHNICAL_DEEP_DIVE",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-tech-1",
+                  "req-tech-2"
+                ],
+                "estimatedMinutes": 20,
+                "answerFramework": {
+                  "approach": "Explain cooperative sticky partition assignor and explicit offset commit strategies",
+                  "keyPointsToCover": [
+                    "Cooperative sticky assignor",
+                    "Manual commit after idempotent processing",
+                    "Heartbeat configuration"
+                  ],
+                  "commonTraps": [
+                    "Using auto-commit or stopping world during rebalance"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Kafka distributed streaming internals and transaction idempotency in Node.js",
+                  "level1Deficient": "Unaware of partition rebalancing or uses naive auto-commit with no error handling",
+                  "level3Acceptable": "Explains manual offset commit after processing and consumer heartbeat timeouts",
+                  "level5Exceptional": "Proposes cooperative rebalance protocol, static membership (group.instance.id), and out-of-band dead letter queues"
+                },
+                "followUpProbes": [
+                  "What happens if max.poll.interval.ms is exceeded during batch execution?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-behav",
+            "title": "Behavioral & Leadership",
+            "type": "BEHAVIORAL",
+            "priority": "HIGH",
+            "questions": [
+              {
+                "questionId": "q-behav-1",
+                "prompt": "Describe a situation where you had to push back on a high-priority product deadline because technical debt posed severe production risk.",
+                "category": "BEHAVIORAL",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-behav-1"
+                ],
+                "estimatedMinutes": 15,
+                "answerFramework": {
+                  "approach": "Use STAR method: explain quantified risk, stakeholder alignment, and phased compromise",
+                  "keyPointsToCover": [
+                    "Objective data/metrics",
+                    "Stakeholder empathy",
+                    "Collaborative mitigation plan"
+                  ],
+                  "commonTraps": [
+                    "Blaming product managers or refusing to compromise"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Technical communication, conflict resolution, and risk prioritization",
+                  "level1Deficient": "Passive aggressive or uncompromising; cannot communicate risk in business terms",
+                  "level3Acceptable": "Explains the technical risk clearly and proposed a reasonable time extension",
+                  "level5Exceptional": "Quantified downtime cost, decoupled release into safe phases, and built alignment without sacrificing quality"
+                },
+                "followUpProbes": [
+                  "How did you maintain developer team morale during that crunch period?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-sys",
+            "title": "System Design & Architecture",
+            "type": "SYSTEM_DESIGN",
+            "priority": "HIGH",
+            "questions": [
+              {
+                "questionId": "q-sys-1",
+                "prompt": "Design a globally distributed payment ledger that guarantees exactly-once transaction processing and sub-100ms response times under 50,000 TPS.",
+                "category": "SYSTEM_DESIGN",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-tech-1",
+                  "req-tech-2"
+                ],
+                "estimatedMinutes": 30,
+                "answerFramework": {
+                  "approach": "Outline functional and non-functional requirements, data model, consensus/partitioning, and failure recovery",
+                  "keyPointsToCover": [
+                    "Idempotency keys with Redis distributed locks",
+                    "Two-phase commit vs Saga orchestrator",
+                    "Partitioning by account ID",
+                    "Read replicas vs event sourcing"
+                  ],
+                  "commonTraps": [
+                    "Relying on distributed ACID transactions across regions without discussing CAP theorem trade-offs"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Distributed ledger architecture, idempotency, consensus, and horizontal scalability",
+                  "level1Deficient": "Single relational database with synchronous locks; fails to handle network partitions",
+                  "level3Acceptable": "Proposes sharded database with idempotency keys and asynchronous event publishing",
+                  "level5Exceptional": "Comprehensive Saga pattern, outbox pattern for DB-Kafka consistency, Raft consensus for state, and clear partition strategies"
+                },
+                "followUpProbes": [
+                  "How does your ledger handle network split-brain scenarios between EU and US data centers?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-fit",
+            "title": "Company Alignment & Culture",
+            "type": "COMPANY_SPECIFIC",
+            "priority": "MEDIUM",
+            "questions": [
+              {
+                "questionId": "q-fit-1",
+                "prompt": "Acme powers financial checkouts where downtime directly causes revenue loss for merchants. How do you approach production observability and proactive failure detection?",
+                "category": "TECHNICAL_DEEP_DIVE",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-domain-1",
+                  "req-tech-1"
+                ],
+                "estimatedMinutes": 15,
+                "answerFramework": {
+                  "approach": "Connect personal monitoring philosophy with Acme mission of developer-first reliability",
+                  "keyPointsToCover": [
+                    "SLIs/SLOs",
+                    "Distributed tracing (OpenTelemetry)",
+                    "Canary deployments",
+                    "Chaos engineering"
+                  ],
+                  "commonTraps": [
+                    "Listing passive log tools without discussing proactive alerting or MTTR reduction"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Alignment with high-reliability payment infrastructure values",
+                  "level1Deficient": "Only checks logs after customer complaints occur",
+                  "level3Acceptable": "Discusses APM alerts, Prometheus metrics, and automated rollback thresholds",
+                  "level5Exceptional": "Demonstrates deep empathy for merchant revenue impact, proactive chaos drills, and synthetic transaction probes"
+                },
+                "followUpProbes": [
+                  "How do you balance aggressive feature delivery with stringent zero-downtime requirements?"
+                ]
+              }
+            ]
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "fc-1",
+            "targetRequirementId": "req-tech-2",
+            "category": "DISTRIBUTED_STREAMING",
+            "frontPrompt": "What is the key difference between Kafka Eager Rebalancing and Cooperative Sticky Rebalancing?",
+            "backKeyPoints": [
+              "Eager rebalancing revokes all partitions from all consumers, causing a \"stop-the-world\" pause.",
+              "Cooperative Sticky Rebalancing revokes only the specific partitions being moved, allowing other consumers to keep processing uninterrupted.",
+              "Configured via partition.assignment.strategy in modern Kafka clients."
+            ],
+            "quickTip": "Always mention CooperativeStickyAssignor in senior backend interviews to show modern production awareness."
+          },
+          {
+            "id": "fc-2",
+            "targetRequirementId": "req-tech-1",
+            "category": "NODEJS_INTERNALS",
+            "frontPrompt": "How do you prevent Node.js Event Loop starvation during CPU-heavy operations?",
+            "backKeyPoints": [
+              "Offload computation to Worker Threads or external microservices.",
+              "Partition heavy loops using setImmediate() or process.nextTick() chunking.",
+              "Never perform synchronous cryptographic or compression calls in request handling paths."
+            ],
+            "quickTip": "Point out that Node.js is single-threaded for execution but utilizes libuv thread pool for async I/O."
+          }
+        ],
+        "coverageScore": 100,
+        "uncoveredGaps": [],
+        "remediationStatus": "FULL_COVERAGE",
+        "schedule": [
+          {
+            "day": 1,
+            "focus": "Distributed Architecture, Scalability & Failure Modes",
+            "question_ids": [
+              "q-sys-1",
+              "q-tech-1"
+            ],
+            "allocatedMinutes": 50,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": false
+          },
+          {
+            "day": 2,
+            "focus": "Leadership, STAR Stories & Conflict Resolution Mastery",
+            "question_ids": [
+              "q-behav-1"
+            ],
+            "allocatedMinutes": 15,
+            "mustHaveCoverage": [
+              "req-behav-1"
+            ],
+            "isReviewDay": false
+          },
+          {
+            "day": 3,
+            "focus": "Company Culture, Mission Alignment & Domain Strategy",
+            "question_ids": [
+              "q-fit-1"
+            ],
+            "allocatedMinutes": 15,
+            "mustHaveCoverage": [
+              "req-tech-1"
+            ],
+            "isReviewDay": false
+          }
+        ],
+        "generatedAt": "2026-09-20T04:40:11.089Z"
+      },
+      "error": null
+    },
+    {
+      "id": "case-03",
+      "status": "ok",
+      "kit": {
+        "targetRole": "Software Engineer",
+        "targetCompany": "Openai",
+        "companyUrl": "https://openai.com",
+        "jobDescriptionRaw": "Machine Learning Platform Engineer. Build scalable inference microservices using Python, Docker, and Redis. Experience with model deployment streaming, GPU cluster scheduling, and strict latency budgets.",
+        "candidateResumeRaw": "",
+        "requirements": [
+          {
+            "id": "req-tech-1",
+            "text": "Distributed systems engineering with Node.js and microservices",
+            "kind": "technical",
+            "priority": "must-have",
+            "sourceSnippet": "Must have 5+ years building backend microservices with Node.js and Express"
+          },
+          {
+            "id": "req-tech-2",
+            "text": "High-throughput event streaming with Apache Kafka",
+            "kind": "technical",
+            "priority": "must-have",
+            "sourceSnippet": "Experience with Kafka topic partitioning and consumer group rebalancing"
+          },
+          {
+            "id": "req-domain-1",
+            "text": "High-concurrency payment and transaction processing",
+            "kind": "domain",
+            "priority": "nice-to-have",
+            "sourceSnippet": "Familiarity with idempotent payment gateways and ledger reconciliation"
+          },
+          {
+            "id": "req-behav-1",
+            "text": "Cross-functional engineering leadership and technical mentorship",
+            "kind": "behavioral",
+            "priority": "must-have",
+            "sourceSnippet": "Proven ability to mentor junior engineers and coordinate cross-team architectures"
+          }
+        ],
+        "isSparseJd": false,
+        "insufficientInfoNotes": null,
+        "companyBrief": {
+          "overview": "Acme Corp is an enterprise cloud payment infrastructure provider powering high-volume online checkouts globally.",
+          "missionValues": [
+            "Developer-first reliability and transparency",
+            "Relentless optimization for sub-50ms latency",
+            "Customer trust and zero financial inaccuracies"
+          ],
+          "techStack": [
+            "Node.js",
+            "Go",
+            "Kafka",
+            "PostgreSQL",
+            "Docker",
+            "Kubernetes"
+          ],
+          "products": [
+            "Acme Ledger",
+            "Checkout Gateway",
+            "Fraud Shield AI"
+          ],
+          "interviewCulture": "Rigorous engineering interviews focusing on architecture, edge cases, distributed concurrency, and proactive system resilience.",
+          "sourceAttribution": [
+            "https://example.com/about",
+            "https://example.com/careers"
+          ]
+        },
+        "roleBreakdown": {
+          "title": "Senior Backend Engineer",
+          "seniority": "Senior",
+          "coreFocus": "Designing and scaling event-driven transaction pipelines and fault-tolerant payment APIs",
+          "dayToDayResponsibilities": [
+            "Architect event-driven pipelines using Node.js and Kafka",
+            "Ensure 99.999% uptime for transaction processing endpoints",
+            "Participate in on-call rotation and lead root-cause analyses",
+            "Mentor junior and mid-level developers"
+          ],
+          "primaryChallenges": [
+            "Eliminating duplicate transaction processing during network partitions",
+            "Managing database failover latency and Kafka partition rebalancing"
+          ],
+          "successCriteria": [
+            "Deliver zero-loss message processing pipeline within first 90 days",
+            "Decrease end-to-end API response times by 25%"
+          ]
+        },
+        "systemDesignApplicable": true,
+        "systemDesignReason": "Role requires distributed architecture and scalability assessment.",
+        "questions": {
+          "technical": [
+            {
+              "id": "q-tech-1",
+              "question": "How do you design Kafka consumer groups in Node.js to prevent data loss or duplicate processing during partition rebalances?",
+              "targetRequirementIds": [
+                "req-tech-1",
+                "req-tech-2"
+              ],
+              "category": "TECHNICAL_DEEP_DIVE",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 20,
+              "answerFramework": {
+                "approach": "Explain cooperative sticky partition assignor and explicit offset commit strategies",
+                "keyPointsToCover": [
+                  "Cooperative sticky assignor",
+                  "Manual commit after idempotent processing",
+                  "Heartbeat configuration"
+                ],
+                "commonTraps": [
+                  "Using auto-commit or stopping world during rebalance"
+                ]
+              },
+              "rubric": {
+                "criteria": "Kafka distributed streaming internals and transaction idempotency in Node.js",
+                "level1Deficient": "Unaware of partition rebalancing or uses naive auto-commit with no error handling",
+                "level3Acceptable": "Explains manual offset commit after processing and consumer heartbeat timeouts",
+                "level5Exceptional": "Proposes cooperative rebalance protocol, static membership (group.instance.id), and out-of-band dead letter queues"
+              },
+              "followUpProbes": [
+                "What happens if max.poll.interval.ms is exceeded during batch execution?"
+              ]
+            }
+          ],
+          "behavioral": [
+            {
+              "id": "q-behav-1",
+              "question": "Describe a situation where you had to push back on a high-priority product deadline because technical debt posed severe production risk.",
+              "targetRequirementIds": [
+                "req-behav-1"
+              ],
+              "category": "BEHAVIORAL",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 15,
+              "answerFramework": {
+                "approach": "Use STAR method: explain quantified risk, stakeholder alignment, and phased compromise",
+                "keyPointsToCover": [
+                  "Objective data/metrics",
+                  "Stakeholder empathy",
+                  "Collaborative mitigation plan"
+                ],
+                "commonTraps": [
+                  "Blaming product managers or refusing to compromise"
+                ]
+              },
+              "rubric": {
+                "criteria": "Technical communication, conflict resolution, and risk prioritization",
+                "level1Deficient": "Passive aggressive or uncompromising; cannot communicate risk in business terms",
+                "level3Acceptable": "Explains the technical risk clearly and proposed a reasonable time extension",
+                "level5Exceptional": "Quantified downtime cost, decoupled release into safe phases, and built alignment without sacrificing quality"
+              },
+              "followUpProbes": [
+                "How did you maintain developer team morale during that crunch period?"
+              ]
+            }
+          ],
+          "systemDesign": [
+            {
+              "id": "q-sys-1",
+              "question": "Design a globally distributed payment ledger that guarantees exactly-once transaction processing and sub-100ms response times under 50,000 TPS.",
+              "targetRequirementIds": [
+                "req-tech-1",
+                "req-tech-2"
+              ],
+              "category": "SYSTEM_DESIGN",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 30,
+              "answerFramework": {
+                "approach": "Outline functional and non-functional requirements, data model, consensus/partitioning, and failure recovery",
+                "keyPointsToCover": [
+                  "Idempotency keys with Redis distributed locks",
+                  "Two-phase commit vs Saga orchestrator",
+                  "Partitioning by account ID",
+                  "Read replicas vs event sourcing"
+                ],
+                "commonTraps": [
+                  "Relying on distributed ACID transactions across regions without discussing CAP theorem trade-offs"
+                ]
+              },
+              "rubric": {
+                "criteria": "Distributed ledger architecture, idempotency, consensus, and horizontal scalability",
+                "level1Deficient": "Single relational database with synchronous locks; fails to handle network partitions",
+                "level3Acceptable": "Proposes sharded database with idempotency keys and asynchronous event publishing",
+                "level5Exceptional": "Comprehensive Saga pattern, outbox pattern for DB-Kafka consistency, Raft consensus for state, and clear partition strategies"
+              },
+              "followUpProbes": [
+                "How does your ledger handle network split-brain scenarios between EU and US data centers?"
+              ]
+            }
+          ],
+          "companyFit": [
+            {
+              "id": "q-fit-1",
+              "question": "Acme powers financial checkouts where downtime directly causes revenue loss for merchants. How do you approach production observability and proactive failure detection?",
+              "targetRequirementIds": [
+                "req-domain-1",
+                "req-tech-1"
+              ],
+              "category": "COMPANY_SPECIFIC",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 15,
+              "answerFramework": {
+                "approach": "Connect personal monitoring philosophy with Acme mission of developer-first reliability",
+                "keyPointsToCover": [
+                  "SLIs/SLOs",
+                  "Distributed tracing (OpenTelemetry)",
+                  "Canary deployments",
+                  "Chaos engineering"
+                ],
+                "commonTraps": [
+                  "Listing passive log tools without discussing proactive alerting or MTTR reduction"
+                ]
+              },
+              "rubric": {
+                "criteria": "Alignment with high-reliability payment infrastructure values",
+                "level1Deficient": "Only checks logs after customer complaints occur",
+                "level3Acceptable": "Discusses APM alerts, Prometheus metrics, and automated rollback thresholds",
+                "level5Exceptional": "Demonstrates deep empathy for merchant revenue impact, proactive chaos drills, and synthetic transaction probes"
+              },
+              "followUpProbes": [
+                "How do you balance aggressive feature delivery with stringent zero-downtime requirements?"
+              ]
+            }
+          ]
+        },
+        "modules": [
+          {
+            "moduleId": "mod-tech",
+            "title": "Technical Deep Dive",
+            "type": "TECHNICAL",
+            "priority": "CRITICAL",
+            "questions": [
+              {
+                "questionId": "q-tech-1",
+                "prompt": "How do you design Kafka consumer groups in Node.js to prevent data loss or duplicate processing during partition rebalances?",
+                "category": "TECHNICAL_DEEP_DIVE",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-tech-1",
+                  "req-tech-2"
+                ],
+                "estimatedMinutes": 20,
+                "answerFramework": {
+                  "approach": "Explain cooperative sticky partition assignor and explicit offset commit strategies",
+                  "keyPointsToCover": [
+                    "Cooperative sticky assignor",
+                    "Manual commit after idempotent processing",
+                    "Heartbeat configuration"
+                  ],
+                  "commonTraps": [
+                    "Using auto-commit or stopping world during rebalance"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Kafka distributed streaming internals and transaction idempotency in Node.js",
+                  "level1Deficient": "Unaware of partition rebalancing or uses naive auto-commit with no error handling",
+                  "level3Acceptable": "Explains manual offset commit after processing and consumer heartbeat timeouts",
+                  "level5Exceptional": "Proposes cooperative rebalance protocol, static membership (group.instance.id), and out-of-band dead letter queues"
+                },
+                "followUpProbes": [
+                  "What happens if max.poll.interval.ms is exceeded during batch execution?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-behav",
+            "title": "Behavioral & Leadership",
+            "type": "BEHAVIORAL",
+            "priority": "HIGH",
+            "questions": [
+              {
+                "questionId": "q-behav-1",
+                "prompt": "Describe a situation where you had to push back on a high-priority product deadline because technical debt posed severe production risk.",
+                "category": "BEHAVIORAL",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-behav-1"
+                ],
+                "estimatedMinutes": 15,
+                "answerFramework": {
+                  "approach": "Use STAR method: explain quantified risk, stakeholder alignment, and phased compromise",
+                  "keyPointsToCover": [
+                    "Objective data/metrics",
+                    "Stakeholder empathy",
+                    "Collaborative mitigation plan"
+                  ],
+                  "commonTraps": [
+                    "Blaming product managers or refusing to compromise"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Technical communication, conflict resolution, and risk prioritization",
+                  "level1Deficient": "Passive aggressive or uncompromising; cannot communicate risk in business terms",
+                  "level3Acceptable": "Explains the technical risk clearly and proposed a reasonable time extension",
+                  "level5Exceptional": "Quantified downtime cost, decoupled release into safe phases, and built alignment without sacrificing quality"
+                },
+                "followUpProbes": [
+                  "How did you maintain developer team morale during that crunch period?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-sys",
+            "title": "System Design & Architecture",
+            "type": "SYSTEM_DESIGN",
+            "priority": "HIGH",
+            "questions": [
+              {
+                "questionId": "q-sys-1",
+                "prompt": "Design a globally distributed payment ledger that guarantees exactly-once transaction processing and sub-100ms response times under 50,000 TPS.",
+                "category": "SYSTEM_DESIGN",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-tech-1",
+                  "req-tech-2"
+                ],
+                "estimatedMinutes": 30,
+                "answerFramework": {
+                  "approach": "Outline functional and non-functional requirements, data model, consensus/partitioning, and failure recovery",
+                  "keyPointsToCover": [
+                    "Idempotency keys with Redis distributed locks",
+                    "Two-phase commit vs Saga orchestrator",
+                    "Partitioning by account ID",
+                    "Read replicas vs event sourcing"
+                  ],
+                  "commonTraps": [
+                    "Relying on distributed ACID transactions across regions without discussing CAP theorem trade-offs"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Distributed ledger architecture, idempotency, consensus, and horizontal scalability",
+                  "level1Deficient": "Single relational database with synchronous locks; fails to handle network partitions",
+                  "level3Acceptable": "Proposes sharded database with idempotency keys and asynchronous event publishing",
+                  "level5Exceptional": "Comprehensive Saga pattern, outbox pattern for DB-Kafka consistency, Raft consensus for state, and clear partition strategies"
+                },
+                "followUpProbes": [
+                  "How does your ledger handle network split-brain scenarios between EU and US data centers?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-fit",
+            "title": "Company Alignment & Culture",
+            "type": "COMPANY_SPECIFIC",
+            "priority": "MEDIUM",
+            "questions": [
+              {
+                "questionId": "q-fit-1",
+                "prompt": "Acme powers financial checkouts where downtime directly causes revenue loss for merchants. How do you approach production observability and proactive failure detection?",
+                "category": "TECHNICAL_DEEP_DIVE",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-domain-1",
+                  "req-tech-1"
+                ],
+                "estimatedMinutes": 15,
+                "answerFramework": {
+                  "approach": "Connect personal monitoring philosophy with Acme mission of developer-first reliability",
+                  "keyPointsToCover": [
+                    "SLIs/SLOs",
+                    "Distributed tracing (OpenTelemetry)",
+                    "Canary deployments",
+                    "Chaos engineering"
+                  ],
+                  "commonTraps": [
+                    "Listing passive log tools without discussing proactive alerting or MTTR reduction"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Alignment with high-reliability payment infrastructure values",
+                  "level1Deficient": "Only checks logs after customer complaints occur",
+                  "level3Acceptable": "Discusses APM alerts, Prometheus metrics, and automated rollback thresholds",
+                  "level5Exceptional": "Demonstrates deep empathy for merchant revenue impact, proactive chaos drills, and synthetic transaction probes"
+                },
+                "followUpProbes": [
+                  "How do you balance aggressive feature delivery with stringent zero-downtime requirements?"
+                ]
+              }
+            ]
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "fc-1",
+            "targetRequirementId": "req-tech-2",
+            "category": "DISTRIBUTED_STREAMING",
+            "frontPrompt": "What is the key difference between Kafka Eager Rebalancing and Cooperative Sticky Rebalancing?",
+            "backKeyPoints": [
+              "Eager rebalancing revokes all partitions from all consumers, causing a \"stop-the-world\" pause.",
+              "Cooperative Sticky Rebalancing revokes only the specific partitions being moved, allowing other consumers to keep processing uninterrupted.",
+              "Configured via partition.assignment.strategy in modern Kafka clients."
+            ],
+            "quickTip": "Always mention CooperativeStickyAssignor in senior backend interviews to show modern production awareness."
+          },
+          {
+            "id": "fc-2",
+            "targetRequirementId": "req-tech-1",
+            "category": "NODEJS_INTERNALS",
+            "frontPrompt": "How do you prevent Node.js Event Loop starvation during CPU-heavy operations?",
+            "backKeyPoints": [
+              "Offload computation to Worker Threads or external microservices.",
+              "Partition heavy loops using setImmediate() or process.nextTick() chunking.",
+              "Never perform synchronous cryptographic or compression calls in request handling paths."
+            ],
+            "quickTip": "Point out that Node.js is single-threaded for execution but utilizes libuv thread pool for async I/O."
+          }
+        ],
+        "coverageScore": 100,
+        "uncoveredGaps": [],
+        "remediationStatus": "FULL_COVERAGE",
+        "schedule": [
+          {
+            "day": 1,
+            "focus": "Distributed Architecture, Scalability & Failure Modes",
+            "question_ids": [
+              "q-sys-1"
+            ],
+            "allocatedMinutes": 30,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": false
+          },
+          {
+            "day": 2,
+            "focus": "Deep Dive: How do you design Kafka consumer groups in No...",
+            "question_ids": [
+              "q-tech-1"
+            ],
+            "allocatedMinutes": 20,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": false
+          },
+          {
+            "day": 3,
+            "focus": "Leadership, STAR Stories & Conflict Resolution Mastery",
+            "question_ids": [
+              "q-behav-1"
+            ],
+            "allocatedMinutes": 15,
+            "mustHaveCoverage": [
+              "req-behav-1"
+            ],
+            "isReviewDay": false
+          },
+          {
+            "day": 4,
+            "focus": "Spaced Review & Speed Recall: COMPANY_SPECIFIC & SYSTEM_DESIGN",
+            "question_ids": [
+              "q-fit-1",
+              "q-sys-1"
+            ],
+            "allocatedMinutes": 27,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 5,
+            "focus": "Spaced Review & Speed Recall: TECHNICAL_DEEP_DIVE",
+            "question_ids": [
+              "q-tech-1"
+            ],
+            "allocatedMinutes": 12,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 6,
+            "focus": "Spaced Review & Speed Recall: BEHAVIORAL",
+            "question_ids": [
+              "q-behav-1"
+            ],
+            "allocatedMinutes": 9,
+            "mustHaveCoverage": [
+              "req-behav-1"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 7,
+            "focus": "Spaced Review & Speed Recall: COMPANY_SPECIFIC",
+            "question_ids": [
+              "q-fit-1"
+            ],
+            "allocatedMinutes": 9,
+            "mustHaveCoverage": [
+              "req-tech-1"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 8,
+            "focus": "Active Rest, Consolidation & Mental Rehearsal",
+            "question_ids": [],
+            "allocatedMinutes": 15,
+            "mustHaveCoverage": [],
+            "isReviewDay": true
+          },
+          {
+            "day": 9,
+            "focus": "Spaced Review & Speed Recall: SYSTEM_DESIGN",
+            "question_ids": [
+              "q-sys-1"
+            ],
+            "allocatedMinutes": 18,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 10,
+            "focus": "Spaced Review & Speed Recall: TECHNICAL_DEEP_DIVE",
+            "question_ids": [
+              "q-tech-1"
+            ],
+            "allocatedMinutes": 12,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 11,
+            "focus": "Spaced Review & Speed Recall: BEHAVIORAL",
+            "question_ids": [
+              "q-behav-1"
+            ],
+            "allocatedMinutes": 9,
+            "mustHaveCoverage": [
+              "req-behav-1"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 12,
+            "focus": "Spaced Review & Speed Recall: COMPANY_SPECIFIC",
+            "question_ids": [
+              "q-fit-1"
+            ],
+            "allocatedMinutes": 9,
+            "mustHaveCoverage": [
+              "req-tech-1"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 13,
+            "focus": "Spaced Review & Speed Recall: SYSTEM_DESIGN & TECHNICAL_DEEP_DIVE",
+            "question_ids": [
+              "q-sys-1",
+              "q-tech-1",
+              "q-behav-1"
+            ],
+            "allocatedMinutes": 39,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2",
+              "req-behav-1"
+            ],
+            "isReviewDay": true
+          },
+          {
+            "day": 14,
+            "focus": "Active Rest, Consolidation & Mental Rehearsal",
+            "question_ids": [],
+            "allocatedMinutes": 30,
+            "mustHaveCoverage": [],
+            "isReviewDay": true
+          }
+        ],
+        "generatedAt": "2026-09-20T04:40:11.445Z"
+      },
+      "error": null
+    },
+    {
+      "id": "case-04",
+      "status": "error",
+      "kit": null,
+      "error": "Case is missing required \"jd\" (job description) string."
+    },
+    {
+      "id": "case-05",
+      "status": "ok",
+      "kit": {
+        "targetRole": "Software Engineer",
+        "targetCompany": "Github",
+        "companyUrl": "https://github.com",
+        "jobDescriptionRaw": "Lead Security Architect. Perform application security architecture reviews, threat modeling using STRIDE, implement OAuth2/OIDC federation, and remediate SSRF and OWASP Top 10 vulnerabilities. Must have 8+ years cybersecurity experience.",
+        "candidateResumeRaw": "",
+        "requirements": [
+          {
+            "id": "req-tech-1",
+            "text": "Distributed systems engineering with Node.js and microservices",
+            "kind": "technical",
+            "priority": "must-have",
+            "sourceSnippet": "Must have 5+ years building backend microservices with Node.js and Express"
+          },
+          {
+            "id": "req-tech-2",
+            "text": "High-throughput event streaming with Apache Kafka",
+            "kind": "technical",
+            "priority": "must-have",
+            "sourceSnippet": "Experience with Kafka topic partitioning and consumer group rebalancing"
+          },
+          {
+            "id": "req-domain-1",
+            "text": "High-concurrency payment and transaction processing",
+            "kind": "domain",
+            "priority": "nice-to-have",
+            "sourceSnippet": "Familiarity with idempotent payment gateways and ledger reconciliation"
+          },
+          {
+            "id": "req-behav-1",
+            "text": "Cross-functional engineering leadership and technical mentorship",
+            "kind": "behavioral",
+            "priority": "must-have",
+            "sourceSnippet": "Proven ability to mentor junior engineers and coordinate cross-team architectures"
+          }
+        ],
+        "isSparseJd": false,
+        "insufficientInfoNotes": null,
+        "companyBrief": {
+          "overview": "Acme Corp is an enterprise cloud payment infrastructure provider powering high-volume online checkouts globally.",
+          "missionValues": [
+            "Developer-first reliability and transparency",
+            "Relentless optimization for sub-50ms latency",
+            "Customer trust and zero financial inaccuracies"
+          ],
+          "techStack": [
+            "Node.js",
+            "Go",
+            "Kafka",
+            "PostgreSQL",
+            "Docker",
+            "Kubernetes"
+          ],
+          "products": [
+            "Acme Ledger",
+            "Checkout Gateway",
+            "Fraud Shield AI"
+          ],
+          "interviewCulture": "Rigorous engineering interviews focusing on architecture, edge cases, distributed concurrency, and proactive system resilience.",
+          "sourceAttribution": [
+            "https://example.com/about",
+            "https://example.com/careers"
+          ]
+        },
+        "roleBreakdown": {
+          "title": "Senior Backend Engineer",
+          "seniority": "Senior",
+          "coreFocus": "Designing and scaling event-driven transaction pipelines and fault-tolerant payment APIs",
+          "dayToDayResponsibilities": [
+            "Architect event-driven pipelines using Node.js and Kafka",
+            "Ensure 99.999% uptime for transaction processing endpoints",
+            "Participate in on-call rotation and lead root-cause analyses",
+            "Mentor junior and mid-level developers"
+          ],
+          "primaryChallenges": [
+            "Eliminating duplicate transaction processing during network partitions",
+            "Managing database failover latency and Kafka partition rebalancing"
+          ],
+          "successCriteria": [
+            "Deliver zero-loss message processing pipeline within first 90 days",
+            "Decrease end-to-end API response times by 25%"
+          ]
+        },
+        "systemDesignApplicable": true,
+        "systemDesignReason": "Role requires distributed architecture and scalability assessment.",
+        "questions": {
+          "technical": [
+            {
+              "id": "q-tech-1",
+              "question": "How do you design Kafka consumer groups in Node.js to prevent data loss or duplicate processing during partition rebalances?",
+              "targetRequirementIds": [
+                "req-tech-1",
+                "req-tech-2"
+              ],
+              "category": "TECHNICAL_DEEP_DIVE",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 20,
+              "answerFramework": {
+                "approach": "Explain cooperative sticky partition assignor and explicit offset commit strategies",
+                "keyPointsToCover": [
+                  "Cooperative sticky assignor",
+                  "Manual commit after idempotent processing",
+                  "Heartbeat configuration"
+                ],
+                "commonTraps": [
+                  "Using auto-commit or stopping world during rebalance"
+                ]
+              },
+              "rubric": {
+                "criteria": "Kafka distributed streaming internals and transaction idempotency in Node.js",
+                "level1Deficient": "Unaware of partition rebalancing or uses naive auto-commit with no error handling",
+                "level3Acceptable": "Explains manual offset commit after processing and consumer heartbeat timeouts",
+                "level5Exceptional": "Proposes cooperative rebalance protocol, static membership (group.instance.id), and out-of-band dead letter queues"
+              },
+              "followUpProbes": [
+                "What happens if max.poll.interval.ms is exceeded during batch execution?"
+              ]
+            }
+          ],
+          "behavioral": [
+            {
+              "id": "q-behav-1",
+              "question": "Describe a situation where you had to push back on a high-priority product deadline because technical debt posed severe production risk.",
+              "targetRequirementIds": [
+                "req-behav-1"
+              ],
+              "category": "BEHAVIORAL",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 15,
+              "answerFramework": {
+                "approach": "Use STAR method: explain quantified risk, stakeholder alignment, and phased compromise",
+                "keyPointsToCover": [
+                  "Objective data/metrics",
+                  "Stakeholder empathy",
+                  "Collaborative mitigation plan"
+                ],
+                "commonTraps": [
+                  "Blaming product managers or refusing to compromise"
+                ]
+              },
+              "rubric": {
+                "criteria": "Technical communication, conflict resolution, and risk prioritization",
+                "level1Deficient": "Passive aggressive or uncompromising; cannot communicate risk in business terms",
+                "level3Acceptable": "Explains the technical risk clearly and proposed a reasonable time extension",
+                "level5Exceptional": "Quantified downtime cost, decoupled release into safe phases, and built alignment without sacrificing quality"
+              },
+              "followUpProbes": [
+                "How did you maintain developer team morale during that crunch period?"
+              ]
+            }
+          ],
+          "systemDesign": [
+            {
+              "id": "q-sys-1",
+              "question": "Design a globally distributed payment ledger that guarantees exactly-once transaction processing and sub-100ms response times under 50,000 TPS.",
+              "targetRequirementIds": [
+                "req-tech-1",
+                "req-tech-2"
+              ],
+              "category": "SYSTEM_DESIGN",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 30,
+              "answerFramework": {
+                "approach": "Outline functional and non-functional requirements, data model, consensus/partitioning, and failure recovery",
+                "keyPointsToCover": [
+                  "Idempotency keys with Redis distributed locks",
+                  "Two-phase commit vs Saga orchestrator",
+                  "Partitioning by account ID",
+                  "Read replicas vs event sourcing"
+                ],
+                "commonTraps": [
+                  "Relying on distributed ACID transactions across regions without discussing CAP theorem trade-offs"
+                ]
+              },
+              "rubric": {
+                "criteria": "Distributed ledger architecture, idempotency, consensus, and horizontal scalability",
+                "level1Deficient": "Single relational database with synchronous locks; fails to handle network partitions",
+                "level3Acceptable": "Proposes sharded database with idempotency keys and asynchronous event publishing",
+                "level5Exceptional": "Comprehensive Saga pattern, outbox pattern for DB-Kafka consistency, Raft consensus for state, and clear partition strategies"
+              },
+              "followUpProbes": [
+                "How does your ledger handle network split-brain scenarios between EU and US data centers?"
+              ]
+            }
+          ],
+          "companyFit": [
+            {
+              "id": "q-fit-1",
+              "question": "Acme powers financial checkouts where downtime directly causes revenue loss for merchants. How do you approach production observability and proactive failure detection?",
+              "targetRequirementIds": [
+                "req-domain-1",
+                "req-tech-1"
+              ],
+              "category": "COMPANY_SPECIFIC",
+              "difficulty": "SENIOR",
+              "estimatedMinutes": 15,
+              "answerFramework": {
+                "approach": "Connect personal monitoring philosophy with Acme mission of developer-first reliability",
+                "keyPointsToCover": [
+                  "SLIs/SLOs",
+                  "Distributed tracing (OpenTelemetry)",
+                  "Canary deployments",
+                  "Chaos engineering"
+                ],
+                "commonTraps": [
+                  "Listing passive log tools without discussing proactive alerting or MTTR reduction"
+                ]
+              },
+              "rubric": {
+                "criteria": "Alignment with high-reliability payment infrastructure values",
+                "level1Deficient": "Only checks logs after customer complaints occur",
+                "level3Acceptable": "Discusses APM alerts, Prometheus metrics, and automated rollback thresholds",
+                "level5Exceptional": "Demonstrates deep empathy for merchant revenue impact, proactive chaos drills, and synthetic transaction probes"
+              },
+              "followUpProbes": [
+                "How do you balance aggressive feature delivery with stringent zero-downtime requirements?"
+              ]
+            }
+          ]
+        },
+        "modules": [
+          {
+            "moduleId": "mod-tech",
+            "title": "Technical Deep Dive",
+            "type": "TECHNICAL",
+            "priority": "CRITICAL",
+            "questions": [
+              {
+                "questionId": "q-tech-1",
+                "prompt": "How do you design Kafka consumer groups in Node.js to prevent data loss or duplicate processing during partition rebalances?",
+                "category": "TECHNICAL_DEEP_DIVE",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-tech-1",
+                  "req-tech-2"
+                ],
+                "estimatedMinutes": 20,
+                "answerFramework": {
+                  "approach": "Explain cooperative sticky partition assignor and explicit offset commit strategies",
+                  "keyPointsToCover": [
+                    "Cooperative sticky assignor",
+                    "Manual commit after idempotent processing",
+                    "Heartbeat configuration"
+                  ],
+                  "commonTraps": [
+                    "Using auto-commit or stopping world during rebalance"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Kafka distributed streaming internals and transaction idempotency in Node.js",
+                  "level1Deficient": "Unaware of partition rebalancing or uses naive auto-commit with no error handling",
+                  "level3Acceptable": "Explains manual offset commit after processing and consumer heartbeat timeouts",
+                  "level5Exceptional": "Proposes cooperative rebalance protocol, static membership (group.instance.id), and out-of-band dead letter queues"
+                },
+                "followUpProbes": [
+                  "What happens if max.poll.interval.ms is exceeded during batch execution?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-behav",
+            "title": "Behavioral & Leadership",
+            "type": "BEHAVIORAL",
+            "priority": "HIGH",
+            "questions": [
+              {
+                "questionId": "q-behav-1",
+                "prompt": "Describe a situation where you had to push back on a high-priority product deadline because technical debt posed severe production risk.",
+                "category": "BEHAVIORAL",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-behav-1"
+                ],
+                "estimatedMinutes": 15,
+                "answerFramework": {
+                  "approach": "Use STAR method: explain quantified risk, stakeholder alignment, and phased compromise",
+                  "keyPointsToCover": [
+                    "Objective data/metrics",
+                    "Stakeholder empathy",
+                    "Collaborative mitigation plan"
+                  ],
+                  "commonTraps": [
+                    "Blaming product managers or refusing to compromise"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Technical communication, conflict resolution, and risk prioritization",
+                  "level1Deficient": "Passive aggressive or uncompromising; cannot communicate risk in business terms",
+                  "level3Acceptable": "Explains the technical risk clearly and proposed a reasonable time extension",
+                  "level5Exceptional": "Quantified downtime cost, decoupled release into safe phases, and built alignment without sacrificing quality"
+                },
+                "followUpProbes": [
+                  "How did you maintain developer team morale during that crunch period?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-sys",
+            "title": "System Design & Architecture",
+            "type": "SYSTEM_DESIGN",
+            "priority": "HIGH",
+            "questions": [
+              {
+                "questionId": "q-sys-1",
+                "prompt": "Design a globally distributed payment ledger that guarantees exactly-once transaction processing and sub-100ms response times under 50,000 TPS.",
+                "category": "SYSTEM_DESIGN",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-tech-1",
+                  "req-tech-2"
+                ],
+                "estimatedMinutes": 30,
+                "answerFramework": {
+                  "approach": "Outline functional and non-functional requirements, data model, consensus/partitioning, and failure recovery",
+                  "keyPointsToCover": [
+                    "Idempotency keys with Redis distributed locks",
+                    "Two-phase commit vs Saga orchestrator",
+                    "Partitioning by account ID",
+                    "Read replicas vs event sourcing"
+                  ],
+                  "commonTraps": [
+                    "Relying on distributed ACID transactions across regions without discussing CAP theorem trade-offs"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Distributed ledger architecture, idempotency, consensus, and horizontal scalability",
+                  "level1Deficient": "Single relational database with synchronous locks; fails to handle network partitions",
+                  "level3Acceptable": "Proposes sharded database with idempotency keys and asynchronous event publishing",
+                  "level5Exceptional": "Comprehensive Saga pattern, outbox pattern for DB-Kafka consistency, Raft consensus for state, and clear partition strategies"
+                },
+                "followUpProbes": [
+                  "How does your ledger handle network split-brain scenarios between EU and US data centers?"
+                ]
+              }
+            ]
+          },
+          {
+            "moduleId": "mod-fit",
+            "title": "Company Alignment & Culture",
+            "type": "COMPANY_SPECIFIC",
+            "priority": "MEDIUM",
+            "questions": [
+              {
+                "questionId": "q-fit-1",
+                "prompt": "Acme powers financial checkouts where downtime directly causes revenue loss for merchants. How do you approach production observability and proactive failure detection?",
+                "category": "TECHNICAL_DEEP_DIVE",
+                "difficulty": "SENIOR",
+                "competencyIds": [
+                  "req-domain-1",
+                  "req-tech-1"
+                ],
+                "estimatedMinutes": 15,
+                "answerFramework": {
+                  "approach": "Connect personal monitoring philosophy with Acme mission of developer-first reliability",
+                  "keyPointsToCover": [
+                    "SLIs/SLOs",
+                    "Distributed tracing (OpenTelemetry)",
+                    "Canary deployments",
+                    "Chaos engineering"
+                  ],
+                  "commonTraps": [
+                    "Listing passive log tools without discussing proactive alerting or MTTR reduction"
+                  ]
+                },
+                "rubric": {
+                  "criteria": "Alignment with high-reliability payment infrastructure values",
+                  "level1Deficient": "Only checks logs after customer complaints occur",
+                  "level3Acceptable": "Discusses APM alerts, Prometheus metrics, and automated rollback thresholds",
+                  "level5Exceptional": "Demonstrates deep empathy for merchant revenue impact, proactive chaos drills, and synthetic transaction probes"
+                },
+                "followUpProbes": [
+                  "How do you balance aggressive feature delivery with stringent zero-downtime requirements?"
+                ]
+              }
+            ]
+          }
+        ],
+        "flashcards": [
+          {
+            "id": "fc-1",
+            "targetRequirementId": "req-tech-2",
+            "category": "DISTRIBUTED_STREAMING",
+            "frontPrompt": "What is the key difference between Kafka Eager Rebalancing and Cooperative Sticky Rebalancing?",
+            "backKeyPoints": [
+              "Eager rebalancing revokes all partitions from all consumers, causing a \"stop-the-world\" pause.",
+              "Cooperative Sticky Rebalancing revokes only the specific partitions being moved, allowing other consumers to keep processing uninterrupted.",
+              "Configured via partition.assignment.strategy in modern Kafka clients."
+            ],
+            "quickTip": "Always mention CooperativeStickyAssignor in senior backend interviews to show modern production awareness."
+          },
+          {
+            "id": "fc-2",
+            "targetRequirementId": "req-tech-1",
+            "category": "NODEJS_INTERNALS",
+            "frontPrompt": "How do you prevent Node.js Event Loop starvation during CPU-heavy operations?",
+            "backKeyPoints": [
+              "Offload computation to Worker Threads or external microservices.",
+              "Partition heavy loops using setImmediate() or process.nextTick() chunking.",
+              "Never perform synchronous cryptographic or compression calls in request handling paths."
+            ],
+            "quickTip": "Point out that Node.js is single-threaded for execution but utilizes libuv thread pool for async I/O."
+          }
+        ],
+        "coverageScore": 100,
+        "uncoveredGaps": [],
+        "remediationStatus": "FULL_COVERAGE",
+        "schedule": [
+          {
+            "day": 1,
+            "focus": "Comprehensive Sprint: Core Architecture & High-Yield Competency Mastery",
+            "question_ids": [
+              "q-sys-1",
+              "q-tech-1",
+              "q-behav-1",
+              "q-fit-1"
+            ],
+            "allocatedMinutes": 80,
+            "mustHaveCoverage": [
+              "req-tech-1",
+              "req-tech-2",
+              "req-behav-1"
+            ],
+            "isReviewDay": false
+          }
+        ],
+        "generatedAt": "2026-09-20T04:40:15.087Z"
+      },
+      "error": null
+    }
+  ]
+}

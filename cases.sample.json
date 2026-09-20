@@ -1,0 +1,32 @@
+[
+  {
+    "id": "case-01",
+    "jd": "Staff Distributed Systems Engineer. You will design and operate high-throughput event-driven microservices processing 100k+ transactions/sec using Node.js, Apache Kafka, and PostgreSQL. Must have 7+ years backend experience, proven track record in distributed data consistency (idempotency, saga patterns), and strong engineering mentorship skills. Nice to have: Kubernetes and multi-region disaster recovery.",
+    "company_url": "https://stripe.com",
+    "days": 5
+  },
+  {
+    "id": "case-02",
+    "jd": "Senior Frontend Engineer. Build highly responsive, accessible web applications using React, Next.js, TypeScript, and Tailwind CSS. Deep experience optimizing Core Web Vitals (LCP, INP, CLS), modern state management, client-side caching, and comprehensive unit testing.",
+    "company_url": "http://localhost:3000",
+    "days": 3
+  },
+  {
+    "id": "case-03",
+    "jd": "Machine Learning Platform Engineer. Build scalable inference microservices using Python, Docker, and Redis. Experience with model deployment streaming, GPU cluster scheduling, and strict latency budgets.",
+    "company_url": "https://openai.com",
+    "days": 14
+  },
+  {
+    "id": "case-04",
+    "jd": "",
+    "company_url": "https://example.com",
+    "days": 7
+  },
+  {
+    "id": "case-05",
+    "jd": "Lead Security Architect. Perform application security architecture reviews, threat modeling using STRIDE, implement OAuth2/OIDC federation, and remediate SSRF and OWASP Top 10 vulnerabilities. Must have 8+ years cybersecurity experience.",
+    "company_url": "https://github.com",
+    "days": 1
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "name": "trao-ai-interview-prep-kit",
+  "version": "1.0.0",
+  "description": "Trao AI Interview Prep Kit - Phase 1 Foundation",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "test": "cd backend && npm test",
+    "evaluate": "node backend/src/scripts/evaluate.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "author": "Trao Assessment Candidate",
+  "license": "ISC"
+}
